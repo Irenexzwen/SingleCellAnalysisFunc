@@ -63,10 +63,22 @@ Plot_Embed_Continous <- function(exprmatx,embd,genename){
 }
 
 
+#' Title Plot 2D embedding with factor group as color scale
+#'
+#' @param exprmatx Dataframe dataframe with each row represents a gene and each column represents a cell
+#' @param embd datafram. By calling Embedding(exprmatx). 
+#' @param group list. (default="red") corresponding to colnames of exprmatx
+#' @param title str. Fig title.
+#'
+#' @return a ggplot object
+#' @export
+#'
+#' @examples sti_vs_ctrl <- Plot_Embed_Category(exprmatx,embd,roup=c(rep("sti",3),rep("ctrl",5)))
 Plot_Embed_Category <- function(exprmatx,embd,group="red",title=""){
   stopifnot(is.data.frame(exprmatx))
   stopifnot(any(is.na(exprmatx) | is.infinite(exprmatx)))
-
+  stopifnot(length(group)==ncol(exprmatx))
+  
   embd['co'] <- factor(group)
   p <- ggplot2::ggplot(embd)+ggplot2::geom_point(aes(x=X1,y=X2,color=co),size=4)+
     ggplot2::ggtitle(title)+ggplot2::xlab("Embedding 1")+ggplot2::ylab("Embedding 2")+
