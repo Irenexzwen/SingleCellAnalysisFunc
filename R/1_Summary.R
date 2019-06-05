@@ -1,6 +1,7 @@
 # 1. Summary
 #   1.1 TopGenes
 #   1.2 TopCells
+#   1.3 Grouped dot+box plot (continue)
 
 #' Title Returen Top expressed genes with highest sum(expr)
 #'

@@ -64,3 +64,57 @@ qqnorm <- function(x){
   return(norm_matrix)
 }
 
+
+
+#' Title
+#'
+#' @param count1 Dataframe. Count table 1, with each row is a gene and each col is a cell.
+#' @param count2 Dataframe. Count table 2, with each row is a gene and each col is a cell.
+#' @param group_pattern list. Group label usually a shared substr of colnames(count), eg c("RAW24","RAW48")
+#' @param thred int(default 20) 
+#'
+#' @return dataframe with DE genes (padj, FoldChange)
+#' @export
+#'
+#' @examples 
+#' de24_48 <- Desq2(RAW24h_count,RAW48h_count,c("RAW24","RAW48"),thred = 20)
+#' head(rownames(de24_48),n=30)
+Desq2 <- function(count1,count2,group_pattern,thred=20){
+
+  table <- data.frame(cbind(count1,count2))
+  ## assign groups
+  pat1 <- group_pattern[1]
+  pat2 <- group_pattern[2]
+  groups <- rep(pat1,length(colnames(table)))
+  groups[grep(pat2,colnames(table))] <- pat2
+  
+  ### combine table1 and 2 and filter genes and cells:
+  
+  counts <- table[rowSums(table)>0,]
+  nGenes <- length(counts[,1])
+  coverage <- colSums(counts)/nGenes
+  counts <- counts[,coverage>10]
+  
+  groups <- groups[coverage>10]
+  groups <- factor(groups,levels=c(pat1,pat2))
+  coverage <- coverage[coverage>1]
+  
+  library(DESeq2)
+  library("BiocParallel")
+  
+  dds <- DESeqDataSetFromMatrix(counts,DataFrame(groups), ~groups)
+  
+  register(MulticoreParam(thred))
+  dds <- DESeq(dds,parallel=TRUE)
+  res <- results(dds)
+  find.significant.genes <- function(de.result,alpha=0.05) {
+    # filter out significant genes based on FDR adjusted p-values
+    filtered <- de.result[(de.result$padj < alpha) & !is.infinite(de.result$log2FoldChange) & !is.nan(de.result$log2FoldChange) & !is.na(de.result$padj),]
+    # order by p-value, and print out only the gene name, mean count, and log2 fold change
+    sorted <- filtered[order(filtered$padj),c(1,2,6)]
+  }
+  
+  de2.genes <- find.significant.genes(res)
+  
+  return(de2.genes)
+}
