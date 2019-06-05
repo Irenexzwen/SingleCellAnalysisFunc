@@ -28,11 +28,11 @@ Embedding <- function(exprmatx,method="umap",rdm=123,n_neighours=20,min_dist=0.5
   }
   else if (method=="umap") {
     matx <- exprmatx %>% as.matrix() %>% t()
-    custom.config = umap.defaults
+    custom.config = umap::umap.defaults
     custom.config$random_state = rdm
     custom.config$n_neighbors = n_neighours
     custom.config$min_dist = min_dist
-    embd <- data.frame(umap(matx,random_state=rdm)$layout)
+    embd <- data.frame(umap::umap(matx,random_state=rdm)$layout)
   }
   
   return(embd)
@@ -43,17 +43,22 @@ Embedding <- function(exprmatx,method="umap",rdm=123,n_neighours=20,min_dist=0.5
 #' @param exprmatx Dataframe dataframe with each row represents a gene and each column represents a cell
 #' @param embd datafram. By calling Embedding(exprmatx). 
 #' @param genename Gene Symbol, eg "Lars2"
+#' @param title title of plot
 #'
 #' @return a ggplot object
 #' @export
 #'
 #' @examples lars2 <- Plot_Embed_Continous(exprmatx,embd,"Lars2")
-Plot_Embed_Continous <- function(exprmatx,embd,genename){
+Plot_Embed_Continous <- function(exprmatx,embd,genename,title=""){
+  
   stopifnot(is.data.frame(exprmatx))
   stopifnot(genename!="")
   stopifnot(genename %in% rownames(exprmatx))
   
-  title <- paste0(genename," Log expression level")
+  library(ggplot2)
+  
+  if(title==""){title <- paste0(genename," Log expression level")}
+  
   embd['co'] <- log(as.numeric(exprmatx[genename,]))
   p <- ggplot2::ggplot(embd)+ggplot2::geom_point(aes(x=X1,y=X2,color=co),size=4)+
     ggplot2::ggtitle(title)+ggplot2::xlab("Embedding 1")+ggplot2::ylab("Embedding 2")+
