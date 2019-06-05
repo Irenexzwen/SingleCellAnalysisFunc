@@ -13,7 +13,6 @@
 #' @examples tpm <- COUNT2TPM(count)
 COUNT2TPM <- function(COUNT){
   stopifnot(is.data.frame(COUNT))
-  stopifnot(any(is.na(COUNT) | is.infinite(COUNT)))
 
   eff <- read.table("SuppData/Kallisto_genelen_mm20.txt",stringsAsFactors = F,header=T,row.names = 1)
   genes <- rownames(COUNT)
@@ -35,7 +34,6 @@ COUNT2TPM <- function(COUNT){
 qqnorm <- function(x){
 
   stopifnot(is.data.frame(x))
-  stopifnot(any(is.na(x) | is.infinite(x)))
 
   norm_matrix <- matrix(0,nrow = nrow(x),ncol=ncol(x))
   rownames(norm_matrix) <- rownames(x)

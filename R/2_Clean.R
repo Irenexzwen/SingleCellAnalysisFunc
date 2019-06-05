@@ -66,6 +66,7 @@ FilterCellBySumCut <- function(summary_,uniqmp=u,prgene=p,mt=m,ercc=e,rRNA=r){
 #' @examples clean_cexpr <- DeleteRowsByNames(expr,c("Lars2","Gm10800"))
 DeleteRowsByNames <- function(DF,row.names.remove){
   stopifnot(is.data.frame(DF))
+  stopifnot(row.names.remove %in% row.names(DF))
   DF <- DF[!(row.names(DF) %in% row.names.remove), ]
   return(DF)
 }
@@ -82,7 +83,8 @@ DeleteRowsByNames <- function(DF,row.names.remove){
 #' @examples clean_cexpr <- DeleteColsByNames(expr,c("Lars2","Gm10800"))
 DeleteColsByNames <- function(DF,col.names.remove){
   stopifnot(is.data.frame(DF))
-  DF <- DF[,!(col.names(DF) %in% col.names.remove)]
+  stopifnot(col.names.remove %in% colnames(DF))
+  DF <- DF[,!(colnames(DF) %in% col.names.remove)]
   return(DF)
 }
 
@@ -99,5 +101,5 @@ DeleteColsByNames <- function(DF,col.names.remove){
 FilterGenesExpr <- function(DF,thre=3){
   stopifnot(is.data.frame(DF))
   stopifnot(thre>0)
-  X[!apply(DF,1,function(x){max(x)<thre}),] # delete row if all items are zero
+  DF[!apply(DF,1,function(x){max(x)<thre}),] # delete row if all items are zero
 }
