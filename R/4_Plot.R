@@ -22,12 +22,12 @@ Embedding <- function(exprmatx,method="umap",rdm=123,n_neighours=20,min_dist=0.5
   stopifnot(is.data.frame(exprmatx))
   
   if(method=="tsne"){
-    matx <- exprmatx %>% as.matrix() %>% t() %>% Rtsne::normalize_input()
+    matx <- exprmatx dplyr::%>% as.matrix() dplyr::%>% t() dplyr::%>% Rtsne::normalize_input()
     tsne_out <- Rtsne(matx,dims=2,perplexity =perplex,max_iter=iter,verbose=FALSE,is_distance=FALSE,pca=TRUE,check_duplicates = F) # Run TSNE
     embd <- data.frame(tsne_out$Y)
   }
   else if (method=="umap") {
-    matx <- exprmatx %>% as.matrix() %>% t()
+    matx <- exprmatx dplyr::%>% as.matrix() dplyr::%>% t()
     custom.config = umap::umap.defaults
     custom.config$random_state = rdm
     custom.config$n_neighbors = n_neighours
@@ -81,6 +81,7 @@ Plot_Embed_Category <- function(exprmatx,embd,group="red",title=""){
   stopifnot(is.data.frame(exprmatx))
   stopifnot(length(group)==ncol(exprmatx))
   
+  library(ggplot2)
   embd['co'] <- factor(group)
   p <- ggplot2::ggplot(embd)+ggplot2::geom_point(aes(x=X1,y=X2,color=co),size=4)+
     ggplot2::ggtitle(title)+ggplot2::xlab("Embedding 1")+ggplot2::ylab("Embedding 2")+
