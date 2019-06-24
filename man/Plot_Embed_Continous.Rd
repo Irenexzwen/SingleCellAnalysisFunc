@@ -4,7 +4,7 @@
 \alias{Plot_Embed_Continous}
 \title{Title Plot 2D embedding with specific gene expression level as color scale}
 \usage{
-Plot_Embed_Continous(exprmatx, embd, genename)
+Plot_Embed_Continous(exprmatx, embd, genename, title = "")
 }
 \arguments{
 \item{exprmatx}{Dataframe dataframe with each row represents a gene and each column represents a cell}
@@ -12,6 +12,8 @@ Plot_Embed_Continous(exprmatx, embd, genename)
 \item{embd}{datafram. By calling Embedding(exprmatx).}
 
 \item{genename}{Gene Symbol, eg "Lars2"}
+
+\item{title}{title of plot}
 }
 \value{
 a ggplot object
