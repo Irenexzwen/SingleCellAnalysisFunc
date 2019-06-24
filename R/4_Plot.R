@@ -94,7 +94,7 @@ Plot_Embed_Category <- function(exprmatx,embd,group="red",title=""){
 
 # Rawreads/cleanReads
 
-#' Title
+#' Title Barplot of Rawreads and Cleanreads
 #'
 #' @param sum Dataframe. Summary table. CellxFeature,c("RawReads","CleanReads"...)
 #' @param col list (default col=c(1,2)). Indicates which columns represents c("RawReads","CleanReads")
@@ -103,7 +103,7 @@ Plot_Embed_Category <- function(exprmatx,embd,group="red",title=""){
 #' @return a ggplot object
 #' @export
 #'
-#' @examples sum <- read.table("/Analysis/bioinfo/wenxingzhao/project/21_RAW_time_series/2019_06_Plate1_Blank_0h_24h/summary/QC_summary/Merge_Summary.txt",header = T, row.names = 1,stringsAsFactors = F)\n p <- Plot_Raw_Clean_Reads(sum = sum,srt = F)
+#' @examples sum <- read.table("/Analysis/bioinfo/wenxingzhao/project/21_RAW_time_series/2019_06_Plate1_Blank_0h_24h/summary/QC_summary/Merge_Summary.txt",header = T, row.names = 1,stringsAsFactors = F) \cr p <- Plot_Raw_Clean_Reads(sum = sum,srt = F)
 Plot_Raw_Clean_Reads <- function(sum,col=c(1,2),srt=T){
 library(dplyr)
 library(reshape2)
@@ -134,10 +134,46 @@ return(p)
 
 
 
+#' Title Box and dot plot of QC features. 
+#'
+#' @param sum Dataframe. Summary table. CellxFeature,c("RawReads","CleanReads"...)
+#' @param group List. pattern of group identifier (which will be used in group)
+#' @param features List. Pattern of selected feature, allow fuzzy search. 
+#'
+#' @return ggplot2 object list. equal length as features list.
+#' @export
+#'
+#' @examples sum <- read.table("/Analysis/bioinfo/wenxingzhao/project/21_RAW_time_series/2019_06_Plate1_Blank_0h_24h/summary/QC_summary/Merge_Summary.txt",header = T, row.names = 1,stringsAsFactors = F) \cr plot_list <- Plot_QC_Features(sum,group = c("blank","0h","24h"),features = c("Clean","Protein"))
+Plot_QC_Features <- function(sum,group,features){
+names <- rep(group[1],nrow(sum))
+message("Please make sure group is valid!")
+for(i in 1:length(group)){
+  idx <- grep(group[i],rownames(sum),ignore.case = T)
+  stopifnot(length(idx)>0)
+  names[idx] <- group[i]
+}
+
+message("Please make sure items in features could be matched to colnames of sum!")
+
+plot_list <- list()
+for(i in seq_along(features)){
+feature <- dplyr::select(sum,grep(features[i],colnames(sum),ignore.case = T))
+stopifnot(ncol(feature)>0)
+cn <- colnames(feature)
+feature <- reshape2::melt(feature)
+feature["category"]=names
+
+library(ggplot2)
+p <- ggplot(feature,aes(y=value,x=category,fill=category))+geom_boxplot(position=position_dodge(width=0.5),width=0.4,alpha=0.8)+theme_classic()+
+  xlab("Experiement design")+ylab(cn)+geom_jitter(position=position_dodge(width=0.5),aes(x=category,y=value,shape=category))+
+  scale_fill_brewer(palette = 1)
+
+plot_list[[i]] <- p }
+
+return(plot_list)
+}
 
 
-
-
-
-
+sum <- read.table("/Analysis/bioinfo/wenxingzhao/project/21_RAW_time_series/2019_06_Plate1_Blank_0h_24h/summary/QC_summary/Merge_Summary.txt",header = T, row.names = 1,stringsAsFactors = F)
+plot_list <- Plot_QC_Features(sum,group = c("blank","0h","24h"),features = c("Clean","Protein"))
 

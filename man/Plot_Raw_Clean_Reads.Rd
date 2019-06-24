@@ -2,7 +2,7 @@
 % Please edit documentation in R/4_Plot.R
 \name{Plot_Raw_Clean_Reads}
 \alias{Plot_Raw_Clean_Reads}
-\title{Title}
+\title{Title Barplot of Rawreads and Cleanreads}
 \usage{
 Plot_Raw_Clean_Reads(sum, col = c(1, 2), srt = T)
 }
@@ -17,8 +17,8 @@ Plot_Raw_Clean_Reads(sum, col = c(1, 2), srt = T)
 a ggplot object
 }
 \description{
-Title
+Title Barplot of Rawreads and Cleanreads
 }
 \examples{
-sum <- read.table("/Analysis/bioinfo/wenxingzhao/project/21_RAW_time_series/2019_06_Plate1_Blank_0h_24h/summary/QC_summary/Merge_Summary.txt",header = T, row.names = 1,stringsAsFactors = F)\\n p <- Plot_Raw_Clean_Reads(sum = sum,srt = F)
+sum <- read.table("/Analysis/bioinfo/wenxingzhao/project/21_RAW_time_series/2019_06_Plate1_Blank_0h_24h/summary/QC_summary/Merge_Summary.txt",header = T, row.names = 1,stringsAsFactors = F) \\cr p <- Plot_Raw_Clean_Reads(sum = sum,srt = F)
 }
