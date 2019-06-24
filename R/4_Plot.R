@@ -133,8 +133,6 @@ return(p)
 }
 
 
-sum <- read.table("/Analysis/bioinfo/wenxingzhao/project/21_RAW_time_series/2019_06_Plate1_Blank_0h_24h/summary/QC_summary/Merge_Summary.txt",header = T, row.names = 1,stringsAsFactors = F)
-p <- Plot_Raw_Clean_Reads(sum = sum,srt = F)
 
 
 
