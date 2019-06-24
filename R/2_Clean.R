@@ -99,7 +99,7 @@ DeleteColsByNames <- function(DF,col.names.remove){
 #'
 #' @examples high_gene_expr_mtx <- FilterGenesExpr(matx,thre=5)
 FilterGenesExpr <- function(DF,thre=3){
-  stopifnot(is.data.frame(DF))
+
   stopifnot(thre>0)
   DF[!apply(DF,1,function(x){max(x)<thre}),] # delete row if all items are zero
 }

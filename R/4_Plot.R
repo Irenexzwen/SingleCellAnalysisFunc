@@ -1,7 +1,11 @@
 # 4. Plot
 #   4.1 DimReduction use tsne or umap to a embedding dataframe
 #   4.2 Use one gene expression level as color scale
-#	4.3 Use category vector level as color map
+# 	4.3 Use category vector level as color map
+# 5. QC result
+#   5.1 Clean/Raw Reads 
+#   5.2 Map Ratio / Uniq map ratio / rRNA ratio / Procoding Num / ERCC ratio / mt Ratio
+#   5.3 Cell-cell correlation
 
 
 #' Title Dimension reduction plot (2D) with tsne/umap
@@ -87,6 +91,55 @@ Plot_Embed_Category <- function(exprmatx,embd,group="red",title=""){
     ggplot2::ggtitle(title)+ggplot2::xlab("Embedding 1")+ggplot2::ylab("Embedding 2")+
     theme_bw()+ggsci::scale_colour_simpsons()
 }
+
+# Rawreads/cleanReads
+
+#' Title
+#'
+#' @param sum Dataframe. Summary table. CellxFeature,c("RawReads","CleanReads"...)
+#' @param col list (default col=c(1,2)). Indicates which columns represents c("RawReads","CleanReads")
+#' @param srt Bool (default srt=TRUE). Whether sort the bar by Clean Reads. 
+#'
+#' @return a ggplot object
+#' @export
+#'
+#' @examples sum <- read.table("/Analysis/bioinfo/wenxingzhao/project/21_RAW_time_series/2019_06_Plate1_Blank_0h_24h/summary/QC_summary/Merge_Summary.txt",header = T, row.names = 1,stringsAsFactors = F)\n p <- Plot_Raw_Clean_Reads(sum = sum,srt = F)
+Plot_Raw_Clean_Reads <- function(sum,col=c(1,2),srt=T){
+library(dplyr)
+library(reshape2)
+library(ggplot2)
+library(scales)
+
+# by default, col1 of sum is Raw reads, col2 is Clean Reads.
+Reads <- data.frame(t(data.frame(sum[col[1]]-sum[col[2]],sum[col[2]])))
+rownames(Reads) <- c("TrimmedReads","CleanReads")
+Reads <- data.frame(t(Reads))
+Reads['name'] <- rownames(sum)
+
+if(srt==TRUE){
+  level <- arrange(Reads,CleanReads)
+} else {  level <- Reads}
+
+Reads <- melt(level)
+
+fill <- c("#5F9EA0", "#E1B378")
+p <- ggplot()+geom_bar(data=Reads,aes(x=factor(name,levels = level$name),fill=variable,weight=value),width = 0.8)+
+  theme_classic()+
+  theme(axis.text.x = element_text(angle = 90, hjust = 1))+
+  scale_fill_manual(values=fill)+ xlab("88 single cells")+ylab("Reads number")+
+  scale_y_continuous(labels = comma)
+
+return(p)
+}
+
+
+sum <- read.table("/Analysis/bioinfo/wenxingzhao/project/21_RAW_time_series/2019_06_Plate1_Blank_0h_24h/summary/QC_summary/Merge_Summary.txt",header = T, row.names = 1,stringsAsFactors = F)
+p <- Plot_Raw_Clean_Reads(sum = sum,srt = F)
+
+
+
+
+
 
 
 
