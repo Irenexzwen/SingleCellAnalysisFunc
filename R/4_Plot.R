@@ -23,7 +23,7 @@
 #'
 #' @examples p <- Embedding(expr,"umap")
 Embedding <- function(exprmatx,method="umap",rdm=123,n_neighours=20,min_dist=0.5,perplex=25,iter=8000){
-  stopifnot(is.data.frame(exprmatx))
+#  stopifnot(is.data.frame(exprmatx))
   library(dplyr)
   if(method=="tsne"){
     matx <- exprmatx %>% as.matrix() %>% t() %>% Rtsne::normalize_input()
@@ -55,7 +55,7 @@ Embedding <- function(exprmatx,method="umap",rdm=123,n_neighours=20,min_dist=0.5
 #' @examples lars2 <- Plot_Embed_Continous(exprmatx,embd,"Lars2")
 Plot_Embed_Continous <- function(exprmatx,embd,genename,title=""){
   
-  stopifnot(is.data.frame(exprmatx))
+#  stopifnot(is.data.frame(exprmatx))
   stopifnot(genename!="")
   stopifnot(genename %in% rownames(exprmatx))
   
@@ -82,7 +82,7 @@ Plot_Embed_Continous <- function(exprmatx,embd,genename,title=""){
 #'
 #' @examples sti_vs_ctrl <- Plot_Embed_Category(exprmatx,embd,roup=c(rep("sti",3),rep("ctrl",5)))
 Plot_Embed_Category <- function(exprmatx,embd,group="red",title=""){
-  stopifnot(is.data.frame(exprmatx))
+#  stopifnot(is.data.frame(exprmatx))
   stopifnot(length(group)==ncol(exprmatx))
   
   library(ggplot2)
