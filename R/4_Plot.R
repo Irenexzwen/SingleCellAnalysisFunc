@@ -143,7 +143,7 @@ return(p)
 #' @return ggplot2 object list. equal length as features list.
 #' @export
 #'
-#' @examples sum <- read.table("/Analysis/bioinfo/wenxingzhao/project/21_RAW_time_series/2019_06_Plate1_Blank_0h_24h/summary/QC_summary/Merge_Summary.txt",header = T, row.names = 1,stringsAsFactors = F) \cr plot_list <- Plot_QC_Features(sum,group = c("blank","0h","24h"),features = c("Clean","Protein"))
+#' @examples sum <- read.table("Merge_Summary.txt",header = T, row.names = 1,stringsAsFactors = F) \cr plot_list <- Plot_QC_Features(sum,group = c("blank","0h","24h"),features = c("Clean","Protein"))
 Plot_QC_Features <- function(sum,group,features){
 names <- rep(group[1],nrow(sum))
 message("Please make sure group is valid!")
@@ -173,7 +173,4 @@ plot_list[[i]] <- p }
 return(plot_list)
 }
 
-
-sum <- read.table("/Analysis/bioinfo/wenxingzhao/project/21_RAW_time_series/2019_06_Plate1_Blank_0h_24h/summary/QC_summary/Merge_Summary.txt",header = T, row.names = 1,stringsAsFactors = F)
-plot_list <- Plot_QC_Features(sum,group = c("blank","0h","24h"),features = c("Clean","Protein"))
 
