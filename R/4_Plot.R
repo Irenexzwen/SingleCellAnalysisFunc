@@ -103,7 +103,7 @@ Plot_Embed_Category <- function(exprmatx,embd,group="red",title=""){
 #' @return a ggplot object
 #' @export
 #'
-#' @examples sum <- read.table("/Analysis/bioinfo/wenxingzhao/project/21_RAW_time_series/2019_06_Plate1_Blank_0h_24h/summary/QC_summary/Merge_Summary.txt",header = T, row.names = 1,stringsAsFactors = F) \cr p <- Plot_Raw_Clean_Reads(sum = sum,srt = F)
+#' @examples sum <- read.table("Merge_Summary.txt",header = T, row.names = 1,stringsAsFactors = F) \cr p <- Plot_Raw_Clean_Reads(sum = sum,srt = F)
 Plot_Raw_Clean_Reads <- function(sum,col=c(1,2),srt=T){
 library(dplyr)
 library(reshape2)
