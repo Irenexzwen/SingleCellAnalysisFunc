@@ -148,7 +148,7 @@ Plot_QC_Features <- function(sum,group,features){
 names <- rep(group[1],nrow(sum))
 message("Please make sure group is valid!")
 for(i in 1:length(group)){
-  idx <- grep(group[i],rownames(sum),ignore.case = T)
+  idx <- grep(group[i],rownames(sum),ignore.case = T,perl=TRUE)
   stopifnot(length(idx)>0)
   names[idx] <- group[i]
 }
