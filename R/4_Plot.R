@@ -17,17 +17,18 @@
 #' @param min_dist float. (default=0.1) between 0-1, Higher, more global structure.
 #' @param perplex int. default = 25 tsne para.
 #' @param iter int. default = 8000 tsne para.
+#' @param n_components int. default = 2 number of dimension you want to project on.
 #'
 #' @return a ggplot object
 #' @export
 #'
 #' @examples p <- Embedding(expr,"umap")
-Embedding <- function(exprmatx,method="umap",rdm=123,n_neighours=20,min_dist=0.5,perplex=25,iter=8000){
+Embedding <- function(exprmatx,method="umap",rdm=123,n_neighours=20,min_dist=0.5,perplex=25,iter=8000,n_components=2){
 #  stopifnot(is.data.frame(exprmatx))
   library(dplyr)
   if(method=="tsne"){
     matx <- exprmatx %>% as.matrix() %>% t() %>% Rtsne::normalize_input()
-    tsne_out <- Rtsne(matx,dims=2,perplexity =perplex,max_iter=iter,verbose=FALSE,is_distance=FALSE,pca=TRUE,check_duplicates = F) # Run TSNE
+    tsne_out <- Rtsne(matx,dims=n_components,perplexity =perplex,max_iter=iter,verbose=FALSE,is_distance=FALSE,pca=TRUE,check_duplicates = F) # Run TSNE
     embd <- data.frame(tsne_out$Y)
   }
   else if (method=="umap") {
@@ -36,7 +37,8 @@ Embedding <- function(exprmatx,method="umap",rdm=123,n_neighours=20,min_dist=0.5
     custom.config$random_state = rdm
     custom.config$n_neighbors = n_neighours
     custom.config$min_dist = min_dist
-    embd <- data.frame(umap::umap(matx,random_state=rdm)$layout)
+    custom.config$n_components = n_components
+    embd <- data.frame(umap::umap(matx,random_state=rdm,config = custom.config)$layout)
   }
   
   return(embd)
